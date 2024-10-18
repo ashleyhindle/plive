@@ -1,0 +1,32 @@
+app = 'plive'
+primary_region = 'lhr'
+kill_signal = 'SIGTERM'
+
+[mounts]
+  source="plive"
+  destination="/mnt/plive"
+
+[build]
+
+[env]
+  DATABASE_PATH = "/mnt/plive/plive.db"
+  PHX_HOST = 'plive.xyz'
+  PORT = '8080'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [http_service.concurrency]
+    type = 'connections'
+    hard_limit = 1000
+    soft_limit = 1000
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
