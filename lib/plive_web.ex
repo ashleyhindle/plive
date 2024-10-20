@@ -85,6 +85,8 @@ defmodule PliveWeb do
       # Core UI components and translation
       import PliveWeb.CoreComponents
 
+      import LiveSvelte
+
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
 

@@ -35,6 +35,7 @@ defmodule PliveWeb.HomeLive do
             type="text"
             label="Question"
             placeholder="What is the meaning of life?"
+            phx-debounce="600"
           />
           <.inputs_for :let={option} field={poll[:options]}>
             <.input
@@ -42,9 +43,10 @@ defmodule PliveWeb.HomeLive do
               type="text"
               label={"Option #{option.index + 1}"}
               placeholder="42"
+              phx-debounce="600"
             />
           </.inputs_for>
-          <.button type="submit">Update</.button>
+          <.button type="submit" phx-disable-with="Saving...">Save</.button>
         </.form>
 
         <h2 class="text-2xl font-bold mt-8 mb-4">Preview</h2>

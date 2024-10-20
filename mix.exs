@@ -40,7 +40,6 @@ defmodule Plive.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.20.2"},
       {:floki, ">= 0.30.0", only: :test},
-      {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:heroicons,
        github: "tailwindlabs/heroicons",
@@ -57,9 +56,10 @@ defmodule Plive.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.2"},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:nodejs, "~> 2.0"},
+      {:nodejs, "~> 3.1"},
       {:html_sanitize_ex, "~> 1.4"},
-      {:nanoid, "~> 2.1.0"}
+      {:nanoid, "~> 2.1.0"},
+      {:live_svelte, "~> 0.14.0"}
     ]
   end
 
@@ -71,15 +71,21 @@ defmodule Plive.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
+      setup: [
+        "deps.get",
+        "ecto.setup",
+        "cmd --cd assets npm install",
+        "assets.setup",
+        "assets.build"
+      ],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+      "assets.setup": ["tailwind.install --if-missing", "cmd --cd assets node build.js --deploy"],
       "assets.build": ["tailwind plive", "esbuild plive"],
       "assets.deploy": [
         "tailwind plive --minify",
-        "esbuild plive --minify",
+        "cmd --cd assets node build.js --deploy",
         "phx.digest"
       ]
     ]

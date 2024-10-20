@@ -1,6 +1,7 @@
 priv/og_image_js/node_modules/
 # The directory Mix will write compiled artifacts to.
 /_build/
+/assets/svelte/_build/
 
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
@@ -40,3 +41,9 @@ npm-debug.log
 *.db
 *.db-*
 
+
+# Ignore automatically generated Svelte files by the ~V sigil
+/assets/svelte/_build/
+
+# Ignore ssr build for svelte.
+/priv/svelte/

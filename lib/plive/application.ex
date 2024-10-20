@@ -10,6 +10,7 @@ defmodule Plive.Application do
     Plive.Release.migrate()
 
     children = [
+      {NodeJS.Supervisor, [path: LiveSvelte.SSR.NodeJS.server_path(), pool_size: 4]},
       PliveWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:plive, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Plive.PubSub},
@@ -21,8 +22,18 @@ defmodule Plive.Application do
       # {Plive.Worker, arg},
       # Start to serve requests, typically the last entry
       PliveWeb.Endpoint,
-      {NodeJS.Supervisor,
-       path: Path.join([Application.app_dir(:plive), "priv/og_image_js"]), pool_size: 4}
+      %{
+        id: :og_nodejs,
+        start:
+          {NodeJS.Supervisor, :start_link,
+           [
+             [
+               name: :og_nodejs,
+               path: Path.join([Application.app_dir(:plive), "priv/og_image_js"]),
+               pool_size: 4
+             ]
+           ]}
+      }
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
